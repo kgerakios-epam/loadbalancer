@@ -4,6 +4,9 @@ import com.interview.test.providers.IProvider;
 
 import java.util.List;
 
+/**
+ * The builder instantiates the load balancers according to the given type.
+ */
 public class LoadBalancerBuilder
 {
     public static LoadBalancer createLoadBalancer(List<IProvider> providers, LoadBalancerConfiguration configuration,

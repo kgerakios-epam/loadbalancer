@@ -2,7 +2,7 @@ package com.interview.test.loadbalancers;
 
 public interface LoadBalancer
 {
-    String ERROR = "ERROR";
+    String ERROR_MESSAGE = "Service Unavailable";
 
     String get();
 

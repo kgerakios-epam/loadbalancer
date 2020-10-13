@@ -85,7 +85,7 @@ public class RandomLoadBalancingTest
             loadBalancer.removeProvider(id);
         }
 
-        if (!loadBalancer.get().equals(LoadBalancer.ERROR))
+        if (!loadBalancer.get().equals(LoadBalancer.ERROR_MESSAGE))
         {
             throw new RuntimeException("Random Load Balancer not Working");
         }

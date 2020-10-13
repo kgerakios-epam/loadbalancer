@@ -1,5 +1,8 @@
 package com.interview.test.loadbalancers;
 
+/**
+ * Configuration DTO that holds all the relevant information needed for the instantiation of the load balancer.
+ */
 public class LoadBalancerConfiguration
 {
     private Integer maxNumberOfProviders;

@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class LoadBalancerApp
+/**
+ * A sample of running a Round-Robin Load Balancer.
+ */
+public class SampleLoadBalancerApp
 {
     public static final double FAILURE_PROBABILITY = 0.3;
 
