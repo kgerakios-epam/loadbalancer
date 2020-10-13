@@ -20,14 +20,7 @@ final class RoundRobinLoadBalancer extends AbstractLoadBalancer implements LoadB
         int i = counter.getAndIncrement();
         if (i < 0)
         {
-            if (i == Integer.MIN_VALUE)
-            {
-                i = 0;
-            }
-            else
-            {
-                i = Integer.MAX_VALUE + i + 1;
-            }
+            i = (Integer.MAX_VALUE + i) + 1;
         }
         return i % getSize();
     }
