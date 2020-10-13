@@ -126,19 +126,25 @@ abstract class AbstractLoadBalancer
     {
         String id = LoadBalancer.ERROR_MESSAGE;
 
-        readLock.lock();
-
-        int numOfAliveProviders = size;
-        final int requests = numberOfConcurrentRequests.incrementAndGet();
-
-        if (requests <= maxNumberOfConcurrentRequests * numOfAliveProviders)
+        try
         {
-            int i = getNext();
-            id = providerList.get(i).get();
-        }
+            readLock.lock();
 
-        numberOfConcurrentRequests.decrementAndGet();
-        readLock.unlock();
+            int numOfAliveProviders = size;
+            final int requests = numberOfConcurrentRequests.incrementAndGet();
+
+            if (requests <= maxNumberOfConcurrentRequests * numOfAliveProviders)
+            {
+                int i = getNext();
+                id = providerList.get(i).get();
+            }
+
+            numberOfConcurrentRequests.decrementAndGet();
+        }
+        finally
+        {
+            readLock.unlock();
+        }
 
         return id;
     }
@@ -151,14 +157,20 @@ abstract class AbstractLoadBalancer
      */
     public void removeProvider(String id)
     {
-        writeLock.lock();
-        final Integer i = uidToProviderIndex.get(id);
-        if (i != null && i < size)
+        try
         {
-            swap(i, size - 1);
-            size--;
+            writeLock.lock();
+            final Integer i = uidToProviderIndex.get(id);
+            if (i != null && i < size)
+            {
+                swap(i, size - 1);
+                size--;
+            }
         }
-        writeLock.unlock();
+        finally
+        {
+            writeLock.unlock();
+        }
     }
 
     /**
@@ -169,14 +181,20 @@ abstract class AbstractLoadBalancer
      */
     public void addProvider(String id)
     {
-        writeLock.lock();
-        final Integer i = uidToProviderIndex.get(id);
-        if (i != null && i >= size)
+        try
         {
-            swap(i, size);
-            size++;
+            writeLock.lock();
+            final Integer i = uidToProviderIndex.get(id);
+            if (i != null && i >= size)
+            {
+                swap(i, size);
+                size++;
+            }
         }
-        writeLock.unlock();
+        finally
+        {
+            writeLock.unlock();
+        }
     }
 
     /**
