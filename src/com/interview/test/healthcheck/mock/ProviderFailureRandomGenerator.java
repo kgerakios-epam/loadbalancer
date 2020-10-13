@@ -9,8 +9,9 @@ public class ProviderFailureRandomGenerator
 
     public ProviderFailureRandomGenerator(double failureProbability)
     {
-        this.failureProbability = (int) (100* failureProbability);
+        this.failureProbability = (int) (100 * failureProbability);
     }
+
     public boolean check()
     {
         return random.nextInt(100) > failureProbability;

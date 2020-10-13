@@ -12,7 +12,6 @@ import java.util.Set;
 
 public class RoundRobinLoadBalancingTest
 {
-
     public static final double FAILURE_PROBABILITY = 0.3;
 
     public static void main(String[] args)
@@ -29,8 +28,8 @@ public class RoundRobinLoadBalancingTest
         int numOfIterations = 5000000;
         int size = 7;
         List<IProvider> providerList = getProviders(size);
-        LoadBalancer loadBalancer = LoadBalancerBuilder.createLoadBalancer(providerList, loadBalancerConfiguration,
-                LoadBalancerType.RoundRobin);
+        LoadBalancer loadBalancer = LoadBalancerBuilder
+                .createLoadBalancer(providerList, loadBalancerConfiguration, LoadBalancerType.RoundRobin);
 
         for (int i = 0; i < numOfIterations; i++)
         {
@@ -47,8 +46,8 @@ public class RoundRobinLoadBalancingTest
         int numberOfProviders = 7;
         int numOfIterations = 50000000;
         List<IProvider> providerList = getProviders(numberOfProviders);
-        LoadBalancer loadBalancer = LoadBalancerBuilder.createLoadBalancer(providerList, loadBalancerConfiguration,
-                LoadBalancerType.RoundRobin);
+        LoadBalancer loadBalancer = LoadBalancerBuilder
+                .createLoadBalancer(providerList, loadBalancerConfiguration, LoadBalancerType.RoundRobin);
 
         testRoundRobinSequenceOfExecutedProviders(numberOfProviders, numOfIterations, loadBalancer);
         checkRemoveProvider(numOfIterations, loadBalancer);
@@ -124,12 +123,13 @@ public class RoundRobinLoadBalancingTest
     {
         try
         {
-            LoadBalancer loadBalancer = LoadBalancerBuilder.createLoadBalancer(new ArrayList<>(11),
-                    loadBalancerConfiguration, LoadBalancerType.RoundRobin);
+            LoadBalancer loadBalancer = LoadBalancerBuilder
+                    .createLoadBalancer(new ArrayList<>(11), loadBalancerConfiguration, LoadBalancerType.RoundRobin);
             throw new RuntimeException("Providers list size check not working");
         }
         catch (final Exception e)
-        {}
+        {
+        }
     }
 
     private static void testRoundRobinSequenceOfExecutedProviders(final int size, final int numOfIterations,
@@ -138,7 +138,7 @@ public class RoundRobinLoadBalancingTest
         for (int i = 0; i < numOfIterations; i++)
         {
             final String id = loadBalancer.get();
-            if (!id.endsWith("-"+(i% size +1)))
+            if (!id.endsWith("-" + (i % size + 1)))
             {
                 throw new RuntimeException("Round Robin is not working");
             }
@@ -148,10 +148,10 @@ public class RoundRobinLoadBalancingTest
     private static List<IProvider> getProviders(final int size)
     {
         ProviderFailureRandomGenerator generator = new ProviderFailureRandomGenerator(FAILURE_PROBABILITY);
-        List < IProvider > providerList = new ArrayList<>();
+        List<IProvider> providerList = new ArrayList<>();
         for (int i = 1; i <= size; i++)
         {
-            providerList.add(new Provider("Provider-"+i, () -> generator.check()));
+            providerList.add(new Provider("Provider-" + i, () -> generator.check()));
         }
         return providerList;
     }

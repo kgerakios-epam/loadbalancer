@@ -14,8 +14,8 @@ abstract class AbstractLoadBalancer
     private static int MAX_PROVIDER_LIST_SIZE = 10;
     private volatile int size;
     private List<IProvider> providerList;
-    private Map<String,Integer> uidToProviderIndex = new HashMap<>();
-    private Map<String,Integer> uidToHealthCheckCount = new HashMap<>();
+    private Map<String, Integer> uidToProviderIndex = new HashMap<>();
+    private Map<String, Integer> uidToHealthCheckCount = new HashMap<>();
     private AtomicInteger numberOfConcurrentRequests = new AtomicInteger();
     private Integer maxNumberOfConcurrentRequests;
     private Integer heartbeatIntervalInSeconds;
@@ -33,7 +33,7 @@ abstract class AbstractLoadBalancer
                 Optional.ofNullable(configuration.getMaxNumberOfProviders()).orElse(MAX_PROVIDER_LIST_SIZE);
 
         maxNumberOfConcurrentRequests = Optional.ofNullable(configuration.getMaxNumberOfConcurrentRequests())
-                                                .orElse(DEFAULT_MAX_CONCURRENT_REQUESTS);
+                .orElse(DEFAULT_MAX_CONCURRENT_REQUESTS);
 
         if (providerList.size() > maxNumberOfProviders)
         {
@@ -42,14 +42,14 @@ abstract class AbstractLoadBalancer
         this.providerList = providerList;
         size = providerList.size();
 
-        for (int i = 0; i <size; i++)
+        for (int i = 0; i < size; i++)
         {
             final String id = providerList.get(i).get();
             uidToProviderIndex.put(id, i);
-            uidToHealthCheckCount.put(id,0);
+            uidToHealthCheckCount.put(id, 0);
         }
 
-        if (heartbeatIntervalInSeconds!= null)
+        if (heartbeatIntervalInSeconds != null)
         {
             startHeartbeatThread(providerList);
         }
@@ -62,28 +62,28 @@ abstract class AbstractLoadBalancer
 
     protected abstract int getNext();
 
-    private void swap(int i,int j)
+    private void swap(int i, int j)
     {
         final IProvider providerI = providerList.get(i);
         final IProvider providerJ = providerList.get(j);
-        providerList.set(j,providerI);
+        providerList.set(j, providerI);
         providerList.set(i, providerJ);
-        uidToProviderIndex.put(providerI.get(),j);
-        uidToProviderIndex.put(providerJ.get(),i);
+        uidToProviderIndex.put(providerI.get(), j);
+        uidToProviderIndex.put(providerJ.get(), i);
     }
 
     public String get()
     {
-        String id= LoadBalancer.ERROR;
+        String id = LoadBalancer.ERROR;
 
         readLock.lock();
 
         int numOfAliveProviders = size;
         final int requests = numberOfConcurrentRequests.incrementAndGet();
 
-        if (requests <= maxNumberOfConcurrentRequests*numOfAliveProviders)
+        if (requests <= maxNumberOfConcurrentRequests * numOfAliveProviders)
         {
-            int i =  getNext();
+            int i = getNext();
             id = providerList.get(i).get();
         }
 
@@ -99,7 +99,7 @@ abstract class AbstractLoadBalancer
         final Integer i = uidToProviderIndex.get(id);
         if (i != null && i < size)
         {
-            swap(i,size-1);
+            swap(i, size - 1);
             size--;
         }
         writeLock.unlock();
@@ -111,7 +111,7 @@ abstract class AbstractLoadBalancer
         final Integer i = uidToProviderIndex.get(id);
         if (i != null && i >= size)
         {
-            swap(i,size);
+            swap(i, size);
             size++;
         }
         writeLock.unlock();
@@ -150,11 +150,9 @@ abstract class AbstractLoadBalancer
         final boolean check = provider.check();
         final String id = provider.get();
         Integer count = uidToHealthCheckCount.get(id);
-        int newCount = check? count+1:count-1;
+        int newCount = check ? count + 1 : count - 1;
 
-        newCount = Math.min(Math.max(0,newCount), MAX_CONSECUTIVE_SUCCESSFUL_HEALTH_CHECKS);
-
-        System.out.println("Checking " + provider.get() + (check ? " healthy" : " unhealthy") + ", new counter " + newCount);
+        newCount = Math.min(Math.max(0, newCount), MAX_CONSECUTIVE_SUCCESSFUL_HEALTH_CHECKS);
 
         if (!check)
         {
@@ -165,7 +163,7 @@ abstract class AbstractLoadBalancer
             newCount = 0;
             addProvider(id);
         }
-        uidToHealthCheckCount.put(id,newCount);
+        uidToHealthCheckCount.put(id, newCount);
     }
 
 }

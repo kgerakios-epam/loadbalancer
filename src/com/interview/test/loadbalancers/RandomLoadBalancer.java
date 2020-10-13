@@ -9,9 +9,9 @@ final class RandomLoadBalancer extends AbstractLoadBalancer implements LoadBalan
 {
     private Random random = new Random();
 
-    public RandomLoadBalancer(final List<IProvider> providerList,LoadBalancerConfiguration configuration)
+    public RandomLoadBalancer(final List<IProvider> providerList, LoadBalancerConfiguration configuration)
     {
-        super(providerList,configuration);
+        super(providerList, configuration);
     }
 
     @Override

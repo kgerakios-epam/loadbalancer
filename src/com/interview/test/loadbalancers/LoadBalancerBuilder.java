@@ -16,7 +16,7 @@ public class LoadBalancerBuilder
         }
         else if (type == LoadBalancerType.RoundRobin)
         {
-            loadBalancer = new RoundRobinLoadBalancer(providers,configuration);
+            loadBalancer = new RoundRobinLoadBalancer(providers, configuration);
         }
 
         if (loadBalancer != null)

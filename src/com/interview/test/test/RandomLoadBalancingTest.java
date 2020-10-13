@@ -29,8 +29,8 @@ public class RandomLoadBalancingTest
         int size = 7;
 
         List<IProvider> providerList = getProviders(size);
-        LoadBalancer loadBalancer = LoadBalancerBuilder.createLoadBalancer(providerList, loadBalancerConfiguration,
-                LoadBalancerType.Random);
+        LoadBalancer loadBalancer = LoadBalancerBuilder
+                .createLoadBalancer(providerList, loadBalancerConfiguration, LoadBalancerType.Random);
 
         for (int i = 0; i < numberOfTests; i++)
         {
@@ -48,8 +48,8 @@ public class RandomLoadBalancingTest
         int size = 7;
         int numberOfTests = 100;
         List<IProvider> providerList = getProviders(size);
-        LoadBalancer loadBalancer = LoadBalancerBuilder.createLoadBalancer(providerList, loadBalancerConfiguration,
-                LoadBalancerType.Random);
+        LoadBalancer loadBalancer = LoadBalancerBuilder
+                .createLoadBalancer(providerList, loadBalancerConfiguration, LoadBalancerType.Random);
 
         for (int i = 0; i < numberOfTests; i++)
         {
@@ -125,21 +125,22 @@ public class RandomLoadBalancingTest
     {
         try
         {
-            LoadBalancerBuilder.createLoadBalancer(new ArrayList<>(11), loadBalancerConfiguration,
-                    LoadBalancerType.Random);
+            LoadBalancerBuilder
+                    .createLoadBalancer(new ArrayList<>(11), loadBalancerConfiguration, LoadBalancerType.Random);
             throw new RuntimeException("Providers list size check not working");
         }
         catch (final Exception e)
-        {}
+        {
+        }
     }
 
     private static List<IProvider> getProviders(final int size)
     {
         ProviderFailureRandomGenerator generator = new ProviderFailureRandomGenerator(FAILURE_PROBABILITY);
-        List < IProvider > providerList = new ArrayList<>();
+        List<IProvider> providerList = new ArrayList<>();
         for (int i = 1; i <= size; i++)
         {
-            providerList.add(new Provider("Provider-"+i, () -> generator.check()));
+            providerList.add(new Provider("Provider-" + i, () -> generator.check()));
         }
         return providerList;
     }
